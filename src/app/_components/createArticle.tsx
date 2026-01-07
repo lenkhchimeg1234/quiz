@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { FileIcon, Sparkles } from "lucide-react";
 
 type Props = {
@@ -59,7 +60,7 @@ export default function CreateArticle({
           <Label>
             <FileIcon /> Article Content
           </Label>
-          <Input
+          <Textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
             placeholder="Paste your article content here..."

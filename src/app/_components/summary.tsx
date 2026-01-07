@@ -17,9 +17,10 @@ type Props = {
   title: string;
   summary: string;
   onBack(): void;
+  onTakeQuiz(): void;
 };
 
-export default function Summary({ title, summary, onBack }: Props) {
+export default function Summary({ title, summary, onBack, onTakeQuiz }: Props) {
   return (
     <div>
       <ChevronLeftIcon onClick={onBack} className="ml-4 mt-4 cursor-pointer" />
@@ -31,7 +32,7 @@ export default function Summary({ title, summary, onBack }: Props) {
               <Sparkles />
               Article Quiz Generator
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="flex items-center">
               <BookOpenIcon />
               Summarized content
             </CardDescription>
@@ -43,7 +44,12 @@ export default function Summary({ title, summary, onBack }: Props) {
             </div>
           </CardContent>
           <CardFooter className="flex justify-end">
-            <Button>Take a quiz</Button>
+            <Button
+              onClick={onTakeQuiz}
+              className="bg-zinc-900 hover:bg-zinc-800 text-white"
+            >
+              Take a quiz
+            </Button>
           </CardFooter>
         </Card>
       </div>
