@@ -13,6 +13,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { FileIcon, Sparkles } from "lucide-react";
+import { useState } from "react";
+
+const CONTENT_LIMIT = 300;
 
 type Props = {
   title: string;
@@ -31,6 +34,12 @@ export default function CreateArticle({
   loading,
   onGenerate,
 }: Props) {
+  const [expanded, setExpanded] = useState(false);
+
+  const isLong = content.length > CONTENT_LIMIT;
+  const displayedContent =
+    isLong && !expanded ? content.slice(0, CONTENT_LIMIT) + "..." : content;
+
   return (
     <Card>
       <CardHeader>
@@ -60,11 +69,33 @@ export default function CreateArticle({
           <Label>
             <FileIcon /> Article Content
           </Label>
-          <Textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            placeholder="Paste your article content here..."
-          />
+
+          {/* Editing mode: always show full textarea */}
+          {expanded || !isLong ? (
+            <Textarea
+              value={content}
+              onChange={(e) => {
+                setContent(e.target.value);
+              }}
+              placeholder="Paste your article content here..."
+              className="min-h-[120px]"
+            />
+          ) : (
+            /* Collapsed preview */
+            <div className="rounded-md border border-input bg-background px-3 py-2 text-sm text-muted-foreground whitespace-pre-wrap break-words">
+              {displayedContent}
+            </div>
+          )}
+
+          {isLong && (
+            <button
+              type="button"
+              onClick={() => setExpanded((prev) => !prev)}
+              className="self-start text-sm font-medium text-primary underline-offset-4 hover:underline focus:outline-none"
+            >
+              {expanded ? "See less" : "See more"}
+            </button>
+          )}
         </div>
       </CardContent>
 
