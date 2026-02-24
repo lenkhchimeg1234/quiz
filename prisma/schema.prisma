@@ -5,12 +5,17 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../src/generated/prisma"
 }
 
+
 datasource db {
   provider = "postgresql"
+  // The `url` datasource property is no longer supported in schema files.
+  // Move connection URLs for Migrate to prisma.config.ts and pass either `adapter`
+  // for a direct database connection or `accelerateUrl` for Accelerate to the
+  // PrismaClient constructor. See https://pris.ly/d/config-datasource
 }
 
 model User {

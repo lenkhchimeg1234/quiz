@@ -33,7 +33,7 @@ export default function Home() {
     questions: Question[];
   } | null>(null);
   const [view, setView] = useState<"form" | "summary" | "quiz" | "history">(
-    "form"
+    "form",
   );
   const [history, setHistory] = useState<ArticleItem[]>([]);
 
@@ -237,6 +237,26 @@ export default function Home() {
             quizData={currentQuizData}
             title={title}
             onBack={() => setView("history")}
+            onSaveAndLeave={async () => {
+              // DB-д хадгалах
+              await fetch("/api/save-and-leave", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({
+                  title,
+                  content,
+                  summary,
+                  questions: currentQuizData.questions,
+                }),
+              });
+              // Эхний хэсэг рүү буцах + state цэвэрлэх
+              setView("form");
+              setTitle("");
+              setContent("");
+              setSummary("");
+              setCurrentQuizData(null);
+            }}
           />
         )}
       </div>

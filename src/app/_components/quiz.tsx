@@ -1,10 +1,7 @@
-// 📁 FILE: app/_components/quiz.tsx
-// Quiz хийх компонент
-
 "use client";
 
 import { useState } from "react";
-import { ArrowLeft, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
 
 interface Question {
   question: string;
@@ -19,9 +16,15 @@ interface QuizProps {
   };
   title: string;
   onBack: () => void;
+  onSaveAndLeave: () => void; // ← нэмсэн
 }
 
-export default function Quiz({ quizData, title, onBack }: QuizProps) {
+export default function Quiz({
+  quizData,
+  title,
+  onBack,
+  onSaveAndLeave,
+}: QuizProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<string[]>([]);
   const [isFinished, setIsFinished] = useState(false);
@@ -36,7 +39,6 @@ export default function Quiz({ quizData, title, onBack }: QuizProps) {
     if (currentStep < questions.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
-      // Оноо тооцоолох
       let finalScore = 0;
       questions.forEach((q, index) => {
         if (q.answer === newAnswers[index]) finalScore++;
@@ -45,10 +47,9 @@ export default function Quiz({ quizData, title, onBack }: QuizProps) {
       setScore(finalScore);
       setIsFinished(true);
 
-      // localStorage-д үр дүн хадгалах
       try {
         const attempts = JSON.parse(
-          localStorage.getItem("quiz_attempts") || "[]"
+          localStorage.getItem("quiz_attempts") || "[]",
         );
         attempts.push({
           quizId: quizData.quizId,
@@ -71,34 +72,28 @@ export default function Quiz({ quizData, title, onBack }: QuizProps) {
     setScore(0);
   };
 
-  // Үр дүнгийн хэсэг
   if (isFinished) {
-    const percentage = Math.round((score / questions.length) * 100);
-
     return (
       <div className="w-full max-w-2xl mx-auto space-y-6">
-        {/* Header */}
         <div className="flex justify-between">
           <div className="flex flex-col">
-            <div className="flex items-center gap-2 ">
+            <div className="flex items-center gap-2">
               <Sparkles />
               <p className="flex items-center justify-start text-black font-inter text-[24px] font-semibold leading-8 tracking-[-0.6px]">
                 Quiz completed
               </p>
             </div>
             <p className="text-center text-[#71717A] font-medium text-base leading-6">
-              Let’s see what you did
+              Let&apos;s see what you did
             </p>
           </div>
         </div>
 
-        {/* Оноо */}
         <div className="bg-white p-8 rounded-2xl shadow-sm text-center border border-gray-100">
           <p className="text-[#18181B] text-start text-2xl font-semibold leading-8">
             Your score: {score}/ {questions.length}
           </p>
 
-          {/* Дэлгэрэнгүй тойм */}
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
             <div className="divide-y divide-gray-100">
               {questions.map((q, index) => {
@@ -152,9 +147,7 @@ export default function Quiz({ quizData, title, onBack }: QuizProps) {
 
                     <div className="ml-9 space-y-1.5 text-start">
                       <p
-                        className={`text-sm ${
-                          isCorrect ? "text-green-700" : "text-[#171717]"
-                        }`}
+                        className={`text-sm ${isCorrect ? "text-green-700" : "text-[#171717]"}`}
                       >
                         <span className="text-[#171717] text-xs font-medium leading-4">
                           Your answer:
@@ -174,7 +167,7 @@ export default function Quiz({ quizData, title, onBack }: QuizProps) {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-4 mt-4">
             <button
               onClick={handleRestart}
               className="py-3 border border-gray-200 rounded-xl font-medium hover:bg-gray-50 transition-colors"
@@ -182,7 +175,7 @@ export default function Quiz({ quizData, title, onBack }: QuizProps) {
               Restart quiz
             </button>
             <button
-              onClick={onBack}
+              onClick={onSaveAndLeave} // ← өөрчилсөн
               className="py-3 bg-black text-white rounded-xl font-medium hover:bg-gray-800 transition-colors"
             >
               Save and leave
@@ -193,40 +186,37 @@ export default function Quiz({ quizData, title, onBack }: QuizProps) {
     );
   }
 
-  // Quiz явагдаж байгаа хэсэг
   const q = questions[currentStep];
 
   return (
     <div className="w-full max-w-2xl mx-auto flex flex-col gap-6">
-      {/* Header */}
       <div className="flex justify-between">
         <div className="flex flex-col">
-          <div className="flex items-center gap-2 ">
+          <div className="flex items-center gap-2">
             <Sparkles />
             <p className="flex items-center justify-start text-black font-inter text-[24px] font-semibold leading-8 tracking-[-0.6px]">
               Quick test
             </p>
           </div>
           <p className="text-center text-[#71717A] font-medium text-base leading-6">
-            Take a quick test about your knowledge from your content{" "}
+            Take a quick test about your knowledge from your content
           </p>
         </div>
 
         <button
           onClick={onBack}
-          className="flex h-10 px-4 py-2 justify-center items-center gap-2 text-zinc-600 hover:text-black transition-colors rounded-md border border-[#E4E4E7] bg-white "
+          className="flex h-10 px-4 py-2 justify-center items-center gap-2 text-zinc-600 hover:text-black transition-colors rounded-md border border-[#E4E4E7] bg-white"
         >
           x
         </button>
       </div>
 
-      {/* Quiz card */}
-      <div className=" bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
-        <div className="flex justify-between items-center gap-4 ">
+      <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
+        <div className="flex justify-between items-center gap-4">
           <h2 className="text-black text-xl font-medium leading-7">
             {q.question}
           </h2>
-          <p className="  text-black text-xl font-medium leading-7">
+          <p className="text-black text-xl font-medium leading-7">
             {currentStep + 1} / {questions.length}
           </p>
         </div>
@@ -236,7 +226,7 @@ export default function Quiz({ quizData, title, onBack }: QuizProps) {
             <button
               key={i}
               onClick={() => handleAnswer(option)}
-              className="flex  px-4 py-2 justify-center items-center gap-2 self-stretch rounded-md border border-[#E4E4E7] bg-whitetext-[#18181B] text-sm font-medium leading-5 box-border"
+              className="flex px-4 py-2 justify-center items-center gap-2 self-stretch rounded-md border border-[#E4E4E7] bg-white text-[#18181B] text-sm font-medium leading-5 box-border"
             >
               {option}
             </button>
