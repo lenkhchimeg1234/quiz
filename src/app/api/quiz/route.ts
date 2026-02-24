@@ -9,13 +9,11 @@ const ai = new GoogleGenAI({
 });
 
 export async function POST(req: Request) {
-  // 1. Хэрэглэгч баталгаажуулалт
   const { userId } = await auth();
   if (!userId) {
     return new Response("Unauthorized", { status: 401 });
   }
 
-  // 2. Request-с өгөгдөл авах
   const { title, content } = await req.json();
 
   if (!title || !content) {
@@ -23,7 +21,6 @@ export async function POST(req: Request) {
   }
 
   try {
-    // 3. AI дуудаж quiz үүсгэх
     const prompt = `
 Create a quiz based on the article below.
 
@@ -58,7 +55,10 @@ ${content}
 
     const quizText = response.text;
 
-    // 4. JSON задлах (```json ``` тэмдэглэгээг арилгах)
+    if (!quizText) {
+      throw new Error("Empty response from AI");
+    }
+
     const jsonMatch = quizText.match(/\{[\s\S]*\}/);
 
     if (!jsonMatch) {
@@ -67,9 +67,8 @@ ${content}
 
     const quiz = JSON.parse(jsonMatch[0]);
 
-    // 5. correctAnswerIndex байвал answer болгох
     if (quiz.questions) {
-      quiz.questions = quiz.questions.map((q: any) => {
+      quiz.questions = quiz.questions.map((q: { question: string; options: string[]; answer?: string; correctAnswerIndex?: number }) => {
         if (typeof q.correctAnswerIndex === "number" && !q.answer) {
           return {
             question: q.question,
@@ -81,10 +80,8 @@ ${content}
       });
     }
 
-    // 6. Quiz ID үүсгэх
     const quizId = crypto.randomUUID();
 
-    // 7. Response буцаах
     return Response.json({
       id: quizId,
       title,
