@@ -76,7 +76,7 @@ export default function Home() {
       });
     } catch (error) {
       console.error("Summary үүсгэх алдаа:", error);
-      alert("Алдаа гарлаа. Дахин оролдоно уу.");
+      alert("Та эхлээд нэвтрэх шаардлагатай байна.");
     } finally {
       setLoading(false);
     }
