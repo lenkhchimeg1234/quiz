@@ -40,7 +40,9 @@ export default function Summary({ title, summary, onBack, onTakeQuiz }: Props) {
           <CardContent className="grid gap-6">
             <div className="grid gap-3">
               <Label htmlFor="tabs-demo-name">{title}</Label>
-              <div>{summary}</div>
+              <div className="h-[220px] overflow-y-auto rounded-md border border-zinc-200 p-3 whitespace-pre-wrap text-sm leading-relaxed text-zinc-700">
+                {summary}
+              </div>
             </div>
           </CardContent>
           <CardFooter className="flex justify-end">

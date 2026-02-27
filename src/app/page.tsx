@@ -191,7 +191,7 @@ export default function Home() {
         </div>
       </div>
       {/* MAIN CONTENT */}
-      <div className="flex w-full h-screen p-7 flex-col justify-center items-center gap-5 overflow-y-auto">
+      <div className="flex w-full  p-7 flex-col justify-center items-center gap-5 overflow-y-auto">
         {/* Form View - Article бичих */}
         {view === "form" && (
           <CreateArticle

@@ -15,7 +15,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useState } from "react";
 
 type Props = {
   title: string;
@@ -32,15 +31,8 @@ export default function History({
   onBack,
   onTakeQuiz,
 }: Props) {
-  const [showFullContent, setShowFullContent] = useState(false);
-
-  const truncateText = (text: string, maxLength: number) => {
-    if (text.length <= maxLength) return text;
-    return text.slice(0, maxLength) + "...";
-  };
-
   return (
-    <div className="w-full max-w-3xl">
+    <div className="w-full max-w-2xl h-fit box-border rounded-lg border bg-white shadow-md p-6">
       <button
         onClick={onBack}
         className="flex items-center gap-2 mb-4 text-zinc-600 hover:text-zinc-900"
@@ -62,7 +54,7 @@ export default function History({
         <CardContent className="grid gap-6">
           <div className="grid gap-3">
             <h3 className="text-xl font-semibold text-zinc-900">{title}</h3>
-            <div className="text-zinc-700 leading-relaxed whitespace-pre-wrap">
+            <div className="h-[80px] overflow-y-auto rounded-md border border-zinc-200 p-3 text-zinc-700 leading-relaxed whitespace-pre-wrap">
               {summary}
             </div>
           </div>
@@ -72,20 +64,12 @@ export default function History({
               <FileTextIcon size={16} />
               Article Content
             </div>
-            <div className="text-zinc-600 text-sm leading-relaxed whitespace-pre-wrap">
-              {showFullContent ? content : truncateText(content, 300)}
+            <div className="max-h-[80px] overflow-y-auto rounded-md border border-zinc-200 p-3 text-zinc-600 text-sm leading-relaxed whitespace-pre-wrap">
+              {content}
             </div>
-            {content.length > 300 && (
-              <button
-                onClick={() => setShowFullContent(!showFullContent)}
-                className="text-black-600 hover:text-black-700 text-sm font-medium text-left"
-              >
-                {showFullContent ? "Show less" : "See more"}
-              </button>
-            )}
           </div>
         </CardContent>
-        <CardFooter className="flex justify-end pt-6">
+        <CardFooter className="flex justify-end pt-2">
           <Button
             onClick={onTakeQuiz}
             className="bg-zinc-900 hover:bg-zinc-800 text-white"
